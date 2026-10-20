@@ -67,7 +67,6 @@ fun Authentication(url: String) {
             ContainedLoadingIndicator()
         }
     }
-
 }
 
 @Composable

@@ -90,13 +90,13 @@ fun DayLessonCard(
                 ) {
                     Text(
                         textAlign = TextAlign.Center,
-                        text = lesson.start + " - " + lesson.end
+                        text = lesson.location
                     )
                     Text(
                         modifier = Modifier.fillMaxSize(),
                         fontSize = 30.sp,
                         textAlign = TextAlign.Center,
-                        text = lesson.location,
+                        text = lesson.start + " - " + lesson.end,
                         color = MaterialTheme.colorScheme.secondary
                     )
                 }

@@ -17,6 +17,7 @@ navigationCompose = "2.10.2"
 room3Compiler = "3.0.3"
 webkit = "1.17.1"
 room3Runtime = "3.0.3"
+qrose="1.3.1"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
@@ -43,6 +44,7 @@ kotlinx-serialization-json-jvm = { module = "org.jetbrains.kotlinx:kotlinx-seria
 ktor-client = { module = "io.ktor:ktor-client", version.ref = "ktorClient" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCio" }
 androidx-room3-runtime = { group = "androidx.room3", name = "room3-runtime", version.ref = "room3Runtime" }
+qrose = { module = "io.github.alexzhirkevich:qrose", version.ref = "qrose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

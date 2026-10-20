@@ -66,5 +66,6 @@ dependencies {
     implementation(libs.kotlinx.serialization.json.jvm)
     implementation(libs.ktor.client)
     implementation(libs.androidx.room3.runtime)
+    implementation(libs.qrose)
     ksp(libs.androidx.room3.compiler)
 }

@@ -8,6 +8,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -26,19 +27,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navigation
 import androidx.room3.Room
-import com.capputinodevelopment.planagerstud.api.Authentication
 import com.capputinodevelopment.planagerstud.components.NavBar
 import com.capputinodevelopment.planagerstud.database.AppDatabase
 import com.capputinodevelopment.planagerstud.database.Database.db
 import com.capputinodevelopment.planagerstud.screens.DayView
+import com.capputinodevelopment.planagerstud.screens.Friends
+import com.capputinodevelopment.planagerstud.screens.Self
+import com.capputinodevelopment.planagerstud.screens.ViewWrapper
 import com.capputinodevelopment.planagerstud.screens.WeekView
-import com.capputinodevelopment.planagerstud.screens.WeekViewWrapper
 import com.capputinodevelopment.planagerstud.ui.theme.PlanagerStudTheme
 
 class MainActivity : ComponentActivity() {
@@ -94,16 +99,23 @@ fun PlanagerStudApp() {
         ) {
             composable(AppDestinations.TODAY.route) {
                 //Authentication("https://studip.tu-braunschweig.de/dispatch.php/login")
-                DayView()
+                ViewWrapper { DayView(it) }
             }
-            composable(AppDestinations.WEEK.route) { WeekViewWrapper() }
+            composable(AppDestinations.WEEK.route) { ViewWrapper{WeekView()} }
             composable(AppDestinations.SETTINGS.route) {
             }
-            composable (AppDestinations.FRIENDS.route) {
-            }
+            friendsGraph(navController,innerPadding)
         }
     }
 
+}
+
+
+fun NavGraphBuilder.friendsGraph(navController: NavController, paddingValues: PaddingValues) {
+    navigation(startDestination = "friends/overview", route = "friends") {
+        composable("friends/overview") { Friends(Modifier.padding(paddingValues), navController) }
+        composable("friends/self") { Self(Modifier.padding(paddingValues), navController) }
+    }
 }
 
 enum class AppDestinations(
@@ -114,6 +126,6 @@ enum class AppDestinations(
 ) {
     TODAY("Heute", "home", Icons.Filled.Home, Icons.Outlined.Home),
     WEEK("Woche", "types", Icons.Filled.ViewWeek, Icons.Outlined.ViewWeek),
-    FRIENDS("Freunde", "details", Icons.Filled.Groups, Icons.Outlined.Groups),
+    FRIENDS("Freunde", "friends", Icons.Filled.Groups, Icons.Outlined.Groups),
     SETTINGS("Einstellungen", "settings", Icons.Filled.Settings, Icons.Outlined.Settings),
 }

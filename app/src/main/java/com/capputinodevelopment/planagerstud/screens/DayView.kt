@@ -39,6 +39,8 @@ import androidx.compose.ui.unit.sp
 import com.capputinodevelopment.planagerstud.components.DayLessonCard
 import com.capputinodevelopment.planagerstud.database.Database.db
 import com.capputinodevelopment.planagerstud.database.Lesson
+import com.capputinodevelopment.planagerstud.ui.theme.RobotoFlexVariable
+import com.capputinodevelopment.planagerstud.ui.theme.RobotoLight
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
@@ -48,9 +50,9 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun DayView(modifier: Modifier = Modifier) {
+fun DayView(date: LocalDate) {
     var lessons by remember { mutableStateOf(listOf<Lesson>()) }
-    val currentDayOfWeek = LocalDate.now().dayOfWeek.ordinal
+    val currentDayOfWeek = date.dayOfWeek.ordinal
     val state = rememberPullToRefreshState()
 
     LaunchedEffect(Unit) {
@@ -66,8 +68,8 @@ fun DayView(modifier: Modifier = Modifier) {
     PullToRefreshBox(
         isRefreshing = isRefreshing,
         onRefresh = onRefresh,
-        modifier = modifier,
         state = state,
+        modifier = Modifier.fillMaxSize(),
         indicator = {
             Indicator(
                 modifier = Modifier.align(Alignment.TopCenter),
@@ -85,7 +87,7 @@ fun DayView(modifier: Modifier = Modifier) {
         } else {
             Column(
                 Modifier
-                    .padding(horizontal = 10.dp)
+                    .padding(horizontal = 16.dp)
                     .verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
@@ -99,13 +101,14 @@ fun DayView(modifier: Modifier = Modifier) {
                         fontSize = 40.sp,
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Bold,
-                        text = LocalDate.now().dayOfWeek.getDisplayName(
+                        text = date.dayOfWeek.getDisplayName(
                             TextStyle.FULL_STANDALONE ,
                             Locale.GERMANY),
                     )
                 }
                 lessons
                     .filter { it.weekDay - 1 == currentDayOfWeek}
+                    .sortedBy { it.start }
                     .forEachIndexed {index, lesson ->
                         var visible by remember { mutableStateOf(false) }
 
