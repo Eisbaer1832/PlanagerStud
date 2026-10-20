@@ -24,7 +24,7 @@ suspend fun parseLesson(element: JsonElement) {
     lesson.until = recurrence.jsonObject["UNTIL"]!!.jsonPrimitive.content
     lesson.exDates = recurrence.jsonObject["EXDATES"]!!.jsonArray.joinToString(",")
 
-    lesson.location = attrs.jsonObject["locations"]!!.jsonArray[0].jsonPrimitive.content
+    lesson.location = attrs.jsonObject["locations"]!!.jsonArray[0].jsonPrimitive.content.split(" - ")[1]
 
     db.lessonsDAO().insertAll(lesson)
 }

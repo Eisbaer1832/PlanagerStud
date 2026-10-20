@@ -36,6 +36,9 @@ import com.capputinodevelopment.planagerstud.api.Authentication
 import com.capputinodevelopment.planagerstud.components.NavBar
 import com.capputinodevelopment.planagerstud.database.AppDatabase
 import com.capputinodevelopment.planagerstud.database.Database.db
+import com.capputinodevelopment.planagerstud.screens.DayView
+import com.capputinodevelopment.planagerstud.screens.WeekView
+import com.capputinodevelopment.planagerstud.screens.WeekViewWrapper
 import com.capputinodevelopment.planagerstud.ui.theme.PlanagerStudTheme
 
 class MainActivity : ComponentActivity() {
@@ -90,10 +93,10 @@ fun PlanagerStudApp() {
             popExitTransition = { fadeOut(animationSpec = tween(100)) }
         ) {
             composable(AppDestinations.TODAY.route) {
-                Authentication("https://studip.tu-braunschweig.de/dispatch.php/login")
+                //Authentication("https://studip.tu-braunschweig.de/dispatch.php/login")
+                DayView()
             }
-            composable(AppDestinations.WEEK.route) {
-            }
+            composable(AppDestinations.WEEK.route) { WeekViewWrapper() }
             composable(AppDestinations.SETTINGS.route) {
             }
             composable (AppDestinations.FRIENDS.route) {
