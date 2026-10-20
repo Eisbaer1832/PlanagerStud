@@ -1,8 +1,6 @@
 package com.capputinodevelopment.planagerstud.api
 
-import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
 import android.webkit.CookieManager
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
@@ -19,7 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.LineHeightStyle
 import androidx.compose.ui.viewinterop.AndroidView
 import io.ktor.client.HttpClient
 import io.ktor.client.statement.HttpResponse
@@ -28,6 +25,7 @@ import io.ktor.client.engine.cio.*
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.HttpHeaders
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
@@ -45,12 +43,16 @@ fun Authentication(url: String) {
         val me: HttpResponse = client.get("https://studip.tu-braunschweig.de/jsonapi.php/v1/users/me") {
             header(HttpHeaders.Cookie, cookies)
         }
-        val json = Json.parseToJsonElement(me.bodyAsText()).jsonObject
-        val userId = json["data"]!!.jsonObject["id"]!!.jsonPrimitive.content
+        val idJson = Json.parseToJsonElement(me.bodyAsText()).jsonObject
+        val userId = idJson["data"]!!.jsonObject["id"]!!.jsonPrimitive.content
         val response: HttpResponse = client.get("https://studip.tu-braunschweig.de/jsonapi.php/v1/users/${userId}/schedule") {
             header(HttpHeaders.Cookie, cookies)
         }
         println(response)
+        val jsonRes = Json.parseToJsonElement(response.bodyAsText()).jsonObject
+        jsonRes["data"]!!.jsonArray.forEach {
+            parseLesson(it)
+        }
     }
 
     if (cookies.isEmpty()) {

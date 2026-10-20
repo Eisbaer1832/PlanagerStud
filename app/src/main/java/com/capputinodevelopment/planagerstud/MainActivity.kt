@@ -24,14 +24,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.room3.Room
 import com.capputinodevelopment.planagerstud.api.Authentication
 import com.capputinodevelopment.planagerstud.components.NavBar
+import com.capputinodevelopment.planagerstud.database.AppDatabase
+import com.capputinodevelopment.planagerstud.database.Database.db
 import com.capputinodevelopment.planagerstud.ui.theme.PlanagerStudTheme
 
 class MainActivity : ComponentActivity() {
@@ -54,6 +58,12 @@ fun PlanagerStudApp() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val context = LocalContext.current
+
+    db = Room.databaseBuilder(
+        context,
+        AppDatabase::class.java, "PlanagerStud"
+    ).build()
 
 
     Scaffold(

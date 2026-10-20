@@ -9,18 +9,20 @@ ktorClient = "3.6.0"
 ktorClientCio = "3.6.0"
 lifecycleRuntimeKtx = "2.11.0"
 activityCompose = "1.13.0"
-kotlin = "2.4.21"
+kotlin = "2.3.0"
 composeBom = "2026.09.00"
 material3Version = "1.5.0-beta01"
 materialIconsExtended = "1.7.8"
 navigationCompose = "2.10.2"
-material3 = "1.0.0-alpha17"
+room3Compiler = "3.0.3"
 webkit = "1.17.1"
+room3Runtime = "3.0.3"
 
 [libraries]
 androidx-compose-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3Version" }
+androidx-room3-compiler = { module = "androidx.room3:room3-compiler", version.ref = "room3Compiler" }
 androidx-webkit = { module = "androidx.webkit:webkit", version.ref = "webkit" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -40,8 +42,10 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 kotlinx-serialization-json-jvm = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm", version.ref = "kotlinxSerializationJsonJvm" }
 ktor-client = { module = "io.ktor:ktor-client", version.ref = "ktorClient" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClientCio" }
+androidx-room3-runtime = { group = "androidx.room3", name = "room3-runtime", version.ref = "room3Runtime" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
