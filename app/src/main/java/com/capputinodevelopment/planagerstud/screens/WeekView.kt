@@ -1,5 +1,6 @@
 package com.capputinodevelopment.planagerstud.screens
 
+import android.telecom.Call
 import android.util.Log.i
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -34,6 +35,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import com.capputinodevelopment.planagerstud.components.DetailsSheet
 import com.capputinodevelopment.planagerstud.components.WeekLessonCard
 import com.capputinodevelopment.planagerstud.database.Database.db
 import com.capputinodevelopment.planagerstud.database.Lesson
@@ -49,10 +51,14 @@ fun WeekView(modifier: Modifier = Modifier) {
     val formatterDisplay = DateTimeFormatter.ofPattern("dd.MM.")
     var weekDates by remember { mutableStateOf(arrayListOf<LocalDate>())}
     var lessons by remember { mutableStateOf(listOf<Lesson>()) }
+    var detailLesson by remember { mutableStateOf<Lesson?>(null) }
 
     LaunchedEffect(Unit) {
         lessons = db.lessonsDAO().getAll().first();
     }
+
+    // show details of a lesson (by clicking on it)
+    detailLesson?.let { DetailsSheet(it) { detailLesson = null } }
 
     val state = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
@@ -158,7 +164,7 @@ fun WeekView(modifier: Modifier = Modifier) {
                                         }
 
                                         Spacer(modifier = Modifier.height(space))
-                                        WeekLessonCard(lesson, height)
+                                        WeekLessonCard(lesson, height) {detailLesson = lesson}
                                 }
                             }
                         }

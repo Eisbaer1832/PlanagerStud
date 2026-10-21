@@ -27,7 +27,7 @@ import kotlin.text.substringAfter
 
 
 @Composable
-fun WeekLessonCard (lesson: Lesson, height: Dp) {
+fun WeekLessonCard (lesson: Lesson, height: Dp, onClick: () -> Unit) {
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
 
@@ -38,7 +38,8 @@ fun WeekLessonCard (lesson: Lesson, height: Dp) {
         modifier = Modifier
             .width(screenWidth / 6)
             .height(h)
-            .padding(3.dp)
+            .padding(3.dp),
+        onClick = {onClick()}
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),

@@ -44,62 +44,59 @@ fun DayLessonCard(
         modifier = Modifier.padding(end = 5.dp),
         shape = RoundedCornerShape(16.dp)
     ){
-
         Column{
             // title
-            Column {
-                Surface(
+            Surface(
+                modifier = Modifier.padding(10.dp),
+                color = MaterialTheme.colorScheme.primaryContainer,
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                Row(
                     modifier = Modifier.padding(10.dp),
-                    color = MaterialTheme.colorScheme.primaryContainer,
-                    shape = RoundedCornerShape(16.dp)
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Row(
-                        modifier = Modifier.padding(10.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(80.dp)
-                                .clip(MaterialShapes.Cookie7Sided.toShape())
-                                .background(MaterialTheme.colorScheme.primary),
-                            contentAlignment = Alignment.Center
-                        ){
-                            Icon(
-                                modifier = Modifier.size(40.dp),
-                                imageVector = Icons.Default.School,
-                                contentDescription = "Localized description",
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
-
-                        Text(
-                            modifier = Modifier.fillMaxSize(),
-                            fontSize = 30.sp,
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold,
-                            lineHeight = 30.sp,
-                            text = lesson.title.substringAfter(" "),
+                    Box(
+                        modifier = Modifier
+                            .size(80.dp)
+                            .clip(MaterialShapes.Cookie7Sided.toShape())
+                            .background(MaterialTheme.colorScheme.primary),
+                        contentAlignment = Alignment.Center
+                    ){
+                        Icon(
+                            modifier = Modifier.size(40.dp),
+                            imageVector = Icons.Default.School,
+                            contentDescription = "Localized description",
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
-                }
 
-                // time and location
-                Column(
-                    modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        textAlign = TextAlign.Center,
-                        text = lesson.location
-                    )
                     Text(
                         modifier = Modifier.fillMaxSize(),
                         fontSize = 30.sp,
                         textAlign = TextAlign.Center,
-                        text = lesson.start + " - " + lesson.end,
-                        color = MaterialTheme.colorScheme.secondary
+                        fontWeight = FontWeight.Bold,
+                        lineHeight = 30.sp,
+                        text = lesson.title.substringAfter(" "),
                     )
                 }
+            }
+
+            // time and location
+            Column(
+                modifier = Modifier.padding(start = 10.dp, end = 10.dp, bottom = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    textAlign = TextAlign.Center,
+                    text = lesson.location
+                )
+                Text(
+                    modifier = Modifier.fillMaxSize(),
+                    fontSize = 30.sp,
+                    textAlign = TextAlign.Center,
+                    text = lesson.start + " - " + lesson.end,
+                    color = MaterialTheme.colorScheme.secondary
+                )
             }
         }
     }

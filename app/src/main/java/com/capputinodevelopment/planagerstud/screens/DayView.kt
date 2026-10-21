@@ -50,7 +50,7 @@ import java.util.Locale
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun DayView(date: LocalDate) {
+fun DayView(date: LocalDate, onRefresh: () -> Unit) {
     var lessons by remember { mutableStateOf(listOf<Lesson>()) }
     val currentDayOfWeek = date.dayOfWeek.ordinal
     val state = rememberPullToRefreshState()
@@ -60,10 +60,6 @@ fun DayView(date: LocalDate) {
     }
 
     var isRefreshing by remember { mutableStateOf(false) }
-    val onRefresh: () -> Unit = {
-        TODO()
-    }
-
 
     PullToRefreshBox(
         isRefreshing = isRefreshing,

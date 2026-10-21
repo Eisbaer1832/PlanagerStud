@@ -68,4 +68,6 @@ dependencies {
     implementation(libs.androidx.room3.runtime)
     implementation(libs.qrose)
     ksp(libs.androidx.room3.compiler)
+    implementation(libs.pocketbase.kotlin)
+    implementation(libs.androidx.datastore.preferences)
 }

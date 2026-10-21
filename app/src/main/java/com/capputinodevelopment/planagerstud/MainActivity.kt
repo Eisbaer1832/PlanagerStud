@@ -99,7 +99,7 @@ fun PlanagerStudApp() {
         ) {
             composable(AppDestinations.TODAY.route) {
                 //Authentication("https://studip.tu-braunschweig.de/dispatch.php/login")
-                ViewWrapper { DayView(it) }
+                ViewWrapper { DayView(it) {} }
             }
             composable(AppDestinations.WEEK.route) { ViewWrapper{WeekView()} }
             composable(AppDestinations.SETTINGS.route) {
