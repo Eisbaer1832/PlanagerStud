@@ -31,10 +31,13 @@ import kotlinx.serialization.json.jsonPrimitive
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun Authentication(url: String) {
+fun Authentication(url: String, done: () -> Unit) {
     var cookies by remember{ mutableStateOf("")};
 
     LaunchedEffect(cookies) {
+        if (cookies.isEmpty()) {
+            return@LaunchedEffect
+        }
         println("cookies:" + cookies);
 
         val client = HttpClient(CIO)
@@ -53,6 +56,7 @@ fun Authentication(url: String) {
         jsonRes["data"]!!.jsonArray.forEach {
             parseLesson(it)
         }
+        done()
     }
 
     if (cookies.isEmpty()) {

@@ -42,6 +42,7 @@ import com.capputinodevelopment.planagerstud.database.Database.db
 import com.capputinodevelopment.planagerstud.screens.DayView
 import com.capputinodevelopment.planagerstud.screens.Friends
 import com.capputinodevelopment.planagerstud.screens.Self
+import com.capputinodevelopment.planagerstud.screens.Settings
 import com.capputinodevelopment.planagerstud.screens.ViewWrapper
 import com.capputinodevelopment.planagerstud.screens.WeekView
 import com.capputinodevelopment.planagerstud.ui.theme.PlanagerStudTheme
@@ -98,12 +99,10 @@ fun PlanagerStudApp() {
             popExitTransition = { fadeOut(animationSpec = tween(100)) }
         ) {
             composable(AppDestinations.TODAY.route) {
-                //Authentication("https://studip.tu-braunschweig.de/dispatch.php/login")
                 ViewWrapper { DayView(it) {} }
             }
-            composable(AppDestinations.WEEK.route) { ViewWrapper{WeekView()} }
-            composable(AppDestinations.SETTINGS.route) {
-            }
+            composable(AppDestinations.WEEK.route) { ViewWrapper(true){WeekView(startDate = it)} }
+            composable(AppDestinations.SETTINGS.route) { Settings(db) }
             friendsGraph(navController,innerPadding)
         }
     }

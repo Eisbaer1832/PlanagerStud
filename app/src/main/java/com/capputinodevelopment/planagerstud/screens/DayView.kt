@@ -5,6 +5,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,13 +18,18 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.MaterialShapes
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
+import androidx.compose.material3.toShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -44,6 +51,7 @@ import com.capputinodevelopment.planagerstud.ui.theme.RobotoLight
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -89,18 +97,44 @@ fun DayView(date: LocalDate, onRefresh: () -> Unit) {
             ) {
                 Row(
                     modifier = Modifier
-                        .padding(vertical = 30.dp)
                         .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(
-                        fontSize = 40.sp,
-                        textAlign = TextAlign.Center,
-                        fontWeight = FontWeight.Bold,
-                        text = date.dayOfWeek.getDisplayName(
-                            TextStyle.FULL_STANDALONE ,
-                            Locale.GERMANY),
-                    )
+                    Box(
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .size(80.dp)
+                            .clip(MaterialShapes.Cookie7Sided.toShape())
+                            .background(MaterialTheme.colorScheme.primary),
+                        contentAlignment = Alignment.Center
+                    ){
+                        Icon(
+                            modifier = Modifier.size(40.dp),
+                            imageVector = Icons.Default.School,
+                            contentDescription = "Localized description",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+
+                    Column (
+                        modifier = Modifier
+                            .padding(vertical = 30.dp)
+                    ) {
+                        Text(
+                            fontSize = 40.sp,
+                            textAlign = TextAlign.Center,
+                            fontWeight = FontWeight.Bold,
+                            text = date.dayOfWeek.getDisplayName(
+                                TextStyle.FULL_STANDALONE ,
+                                Locale.GERMANY),
+                        )
+                        val pattern = "dd.MM.yyyy"
+                        val formatter = DateTimeFormatter.ofPattern(pattern)
+                        Text(
+                            text = date.format(formatter)
+                        )
+                    }
                 }
                 lessons
                     .filter { it.weekDay - 1 == currentDayOfWeek}

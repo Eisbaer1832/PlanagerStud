@@ -23,7 +23,7 @@ import java.time.temporal.IsoFields
 // this wraps the week view, so you can smoothly swipe between different weeks
 @OptIn(ExperimentalAnimationApi::class, ExperimentalFoundationApi::class)
 @Composable
-fun ViewWrapper(view: @Composable (LocalDate) -> Unit) {
+fun ViewWrapper(addWeeks: Boolean = false, view: @Composable (LocalDate) -> Unit) {
     val pagerState = rememberPagerState(pageCount = { 5 })
     HorizontalPager(
         state = pagerState,
@@ -31,5 +31,9 @@ fun ViewWrapper(view: @Composable (LocalDate) -> Unit) {
         key = { it },
 
     ) { index ->
-        view(LocalDate.now().plusDays(index.toLong()))
+        if (addWeeks) {
+            view(LocalDate.now().plusWeeks(index.toLong()))
+        }else {
+            view(LocalDate.now().plusDays(index.toLong()))
+        }
     }}

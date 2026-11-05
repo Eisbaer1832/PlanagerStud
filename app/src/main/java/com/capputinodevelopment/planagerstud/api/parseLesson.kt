@@ -8,7 +8,9 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 
 suspend fun parseLesson(element: JsonElement) {
+    println(element)
     var lesson = Lesson()
+
     val attrs = element.jsonObject["attributes"]!!
     val recurrence = attrs.jsonObject["recurrence"]!!
 

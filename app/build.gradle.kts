@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp") version "2.3.12"
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -70,4 +71,7 @@ dependencies {
     ksp(libs.androidx.room3.compiler)
     implementation(libs.pocketbase.kotlin)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.preference.ktx)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
 }

@@ -74,11 +74,18 @@ fun DetailsSheet(lesson: Lesson, hide: () -> Unit) {
 
                 }
             }
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp).padding(top = 16.dp),
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                text = "Start:"
+            )
             Surface(
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = RoundedCornerShape(16.dp),
                 modifier = Modifier
-                    .padding(16.dp)
+                    .padding(horizontal = 16.dp)
             ) {
                 Text(
                     modifier = Modifier
@@ -88,6 +95,13 @@ fun DetailsSheet(lesson: Lesson, hide: () -> Unit) {
                     text = lesson.from
                 )
             }
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp).padding(top = 16.dp),
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                text = "Ende:"
+            )
             Surface(
                 color = MaterialTheme.colorScheme.surfaceContainer,
                 shape = RoundedCornerShape(16.dp),
@@ -100,6 +114,28 @@ fun DetailsSheet(lesson: Lesson, hide: () -> Unit) {
                         .padding(16.dp),
                     textAlign = TextAlign.Center,
                     text = lesson.until
+                )
+            }
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 16.dp),
+                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                text = "Findet nicht statt am:"
+            )
+            Surface(
+                color = MaterialTheme.colorScheme.surfaceContainer,
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    textAlign = TextAlign.Center,
+                    text = lesson.exDates.replace(",", "\n")
                 )
             }
         }
