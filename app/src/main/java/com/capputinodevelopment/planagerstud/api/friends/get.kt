@@ -1,9 +1,46 @@
 package com.capputinodevelopment.planagerstud.api.friends
 
-import android.content.SharedPreferences
 import com.capputinodevelopment.planagerstud.database.AppDatabase
+import com.capputinodevelopment.planagerstud.database.Friend
+import com.capputinodevelopment.planagerstud.database.Lesson
+import com.capputinodevelopment.planagerstud.database.preferences.aesDecrypt
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.client.utils.EmptyContent.contentType
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.first
+import kotlinx.serialization.json.Json
+import java.util.Base64
+import javax.crypto.spec.SecretKeySpec
 
-suspend fun getFriend(db: AppDatabase,) {
-
+suspend fun getFriends(db: AppDatabase,): List<Friend> {
+    return db.friendsDAO().getAll().first()
 }
 
+suspend fun getFriendsData(friend: Friend): List<Lesson> {
+    val client = HttpClient() {
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+                encodeDefaults = true
+            })
+        }
+    }
+    val keyBytes = Base64.getDecoder().decode(friend.key)
+    val loadedKey = SecretKeySpec(keyBytes, "AES")
+
+    val res = client.get("http://194.163.141.76:3003/api/get/" +friend.username)
+    val body = res.body<String>()
+    val data = Base64.getDecoder().decode(body)
+    val decryptedTable = aesDecrypt( data, loadedKey).decodeToString()
+
+    val parsed = Json.decodeFromString<List<Lesson>>(decryptedTable)
+
+    return parsed
+}

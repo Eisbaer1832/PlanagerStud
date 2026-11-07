@@ -36,9 +36,11 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import androidx.room3.Room
+import com.capputinodevelopment.planagerstud.components.FABAddFriend
 import com.capputinodevelopment.planagerstud.components.NavBar
 import com.capputinodevelopment.planagerstud.database.AppDatabase
 import com.capputinodevelopment.planagerstud.database.Database.db
+import com.capputinodevelopment.planagerstud.database.Friend
 import com.capputinodevelopment.planagerstud.screens.DayView
 import com.capputinodevelopment.planagerstud.screens.Friends
 import com.capputinodevelopment.planagerstud.screens.Self
@@ -60,6 +62,11 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+class Globals {
+    companion object {
+        var currentFriend: Friend? = null;
+    }
+}
 @PreviewScreenSizes
 @Composable
 fun PlanagerStudApp() {
@@ -77,6 +84,11 @@ fun PlanagerStudApp() {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        floatingActionButton =  {
+            if (currentRoute == "friends/overview") {
+                FABAddFriend(db)
+            }
+        },
         bottomBar = {
             NavBar(
                 currentScreen = currentRoute,
@@ -102,7 +114,7 @@ fun PlanagerStudApp() {
                 ViewWrapper { DayView(it) {} }
             }
             composable(AppDestinations.WEEK.route) { ViewWrapper(true){WeekView(startDate = it)} }
-            composable(AppDestinations.SETTINGS.route) { Settings(db) }
+            composable(AppDestinations.SETTINGS.route) { Settings(db, innerPadding) }
             friendsGraph(navController,innerPadding)
         }
     }
@@ -112,8 +124,10 @@ fun PlanagerStudApp() {
 
 fun NavGraphBuilder.friendsGraph(navController: NavController, paddingValues: PaddingValues) {
     navigation(startDestination = "friends/overview", route = "friends") {
-        composable("friends/overview") { Friends(Modifier.padding(paddingValues), navController) }
+        composable("friends/overview") { Friends(Modifier.padding(paddingValues), navController, db) }
         composable("friends/self") { Self(Modifier.padding(paddingValues), navController) }
+        composable("friends/view") { ViewWrapper(true){WeekView(startDate = it, friend = Globals.currentFriend)} }
+
     }
 }
 

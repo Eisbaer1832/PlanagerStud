@@ -1,9 +1,6 @@
 package com.capputinodevelopment.planagerstud.screens
 
-import android.telecom.Call
-import android.util.Log.i
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,24 +35,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import com.capputinodevelopment.planagerstud.api.friends.getFriendsData
 import com.capputinodevelopment.planagerstud.components.DetailsSheet
 import com.capputinodevelopment.planagerstud.components.WeekLessonCard
 import com.capputinodevelopment.planagerstud.database.Database.db
+import com.capputinodevelopment.planagerstud.database.Friend
 import com.capputinodevelopment.planagerstud.database.Lesson
 import kotlinx.coroutines.flow.first
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import kotlin.math.floor
 
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun WeekView(modifier: Modifier = Modifier, startDate: LocalDate) {
+fun WeekView(modifier: Modifier = Modifier, startDate: LocalDate, friend: Friend? = null) {
     var lessons by remember { mutableStateOf(listOf<Lesson>()) }
     var detailLesson by remember { mutableStateOf<Lesson?>(null) }
 
     LaunchedEffect(Unit) {
-        lessons = db.lessonsDAO().getAll().first();
+        lessons = if (friend == null) {
+             db.lessonsDAO().getAll().first();
+        }else {
+            getFriendsData(friend)
+        }
     }
 
     // show details of a lesson (by clicking on it)

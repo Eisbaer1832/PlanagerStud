@@ -17,6 +17,10 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import com.capputinodevelopment.planagerstud.database.AppDatabase
+import com.capputinodevelopment.planagerstud.database.Database.db
+import com.capputinodevelopment.planagerstud.database.Lesson
+import kotlinx.coroutines.flow.first
 import java.time.LocalDate
 import java.time.temporal.IsoFields
 
@@ -37,3 +41,5 @@ fun ViewWrapper(addWeeks: Boolean = false, view: @Composable (LocalDate) -> Unit
             view(LocalDate.now().plusDays(index.toLong()))
         }
     }}
+
+

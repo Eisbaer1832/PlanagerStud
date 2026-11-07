@@ -15,15 +15,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.capputinodevelopment.planagerstud.Globals
+import com.capputinodevelopment.planagerstud.api.friends.getFriends
 import com.capputinodevelopment.planagerstud.components.Headline
 import com.capputinodevelopment.planagerstud.components.SubHeadline
+import com.capputinodevelopment.planagerstud.database.AppDatabase
+import com.capputinodevelopment.planagerstud.database.Friend
 
 @Composable
-fun Friends(modifier: Modifier, navController: NavController) {
+fun Friends(modifier: Modifier, navController: NavController, db: AppDatabase) {
+    var friends by remember { mutableStateOf(listOf<Friend>()) }
+
+    LaunchedEffect(Unit) {
+        friends = getFriends(db)
+    }
     Column(
         modifier = modifier
     ) {
@@ -49,16 +63,21 @@ fun Friends(modifier: Modifier, navController: NavController) {
             }
         }
 
-        OutlinedButton(
-            elevation = ButtonDefaults.elevatedButtonElevation(),
-            onClick = {},
-            shape = RoundedCornerShape(16.dp),
-            modifier = Modifier
-                .height(64.dp)
-                .padding(horizontal = 16.dp)
-                .fillMaxWidth(),
-        ) {
-            Text("Kristin")
+        friends.forEach { friend ->
+            OutlinedButton(
+                elevation = ButtonDefaults.elevatedButtonElevation(),
+                onClick = {
+                    Globals.currentFriend = friend
+                    navController.navigate("friends/view")
+                },
+                shape = RoundedCornerShape(16.dp),
+                modifier = Modifier
+                    .height(64.dp)
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth(),
+            ) {
+                Text(friend.username)
+            }
         }
 
     }

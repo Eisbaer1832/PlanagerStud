@@ -9,7 +9,32 @@ import kotlinx.serialization.json.jsonPrimitive
 
 suspend fun parseLesson(element: JsonElement) {
     println(element)
-    var lesson = Lesson()
+
+    val lesson = if (element.jsonObject["type"]?.jsonPrimitive?.content == "schedule-entries") {
+        customEntry(element)
+    }else {
+        course(element)
+    }
+
+    db.lessonsDAO().insertAll(lesson)
+}
+
+fun customEntry(element: JsonElement): Lesson {
+    val lesson = Lesson()
+    val attrs = element.jsonObject["attributes"]!!
+    lesson.id = element.jsonObject["id"]!!.jsonPrimitive.content
+
+    lesson.title = attrs.jsonObject["title"]!!.jsonPrimitive.content
+    lesson.location = attrs.jsonObject["description"]!!.jsonPrimitive.content
+    lesson.start = attrs.jsonObject["start"]!!.jsonPrimitive.content
+    lesson.end = attrs.jsonObject["end"]!!.jsonPrimitive.content
+    lesson.weekDay = attrs.jsonObject["weekday"]!!.jsonPrimitive.content.toInt()
+
+    return lesson
+}
+
+fun course(element: JsonElement): Lesson {
+    val lesson = Lesson()
 
     val attrs = element.jsonObject["attributes"]!!
     val recurrence = attrs.jsonObject["recurrence"]!!
@@ -28,5 +53,5 @@ suspend fun parseLesson(element: JsonElement) {
 
     lesson.location = attrs.jsonObject["locations"]!!.jsonArray[0].jsonPrimitive.content.split(" - ")[1]
 
-    db.lessonsDAO().insertAll(lesson)
+    return lesson
 }

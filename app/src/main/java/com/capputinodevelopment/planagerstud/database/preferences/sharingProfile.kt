@@ -25,8 +25,11 @@ fun saveKey(prefs: SharedPreferences) {
     }
 }
 
-fun getKey(prefs: SharedPreferences): SecretKeySpec {
+fun getKey(prefs: SharedPreferences): SecretKeySpec? {
     val keyString = prefs.getString("key", "")
+    if (keyString.isNullOrEmpty()) {
+        return null
+    }
     val keyBytes = Base64.getDecoder().decode(keyString)
     val loadedKey = SecretKeySpec(keyBytes, "AES")
 

@@ -17,18 +17,18 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.put
+import java.util.Base64
 
 suspend fun pushToServer(db: AppDatabase, prefs: SharedPreferences) {
     val lessons = db.lessonsDAO().getAll().first()
-    val keyObj = Json.encodeToJsonElement(lessons)
-    val encoded = aesEncrypt(keyObj.toString().encodeToByteArray(), getKey(prefs)).toString(Charsets.UTF_8)
-
+    val plain = Json.encodeToString(lessons).encodeToByteArray()
+    val cipher = aesEncrypt(plain, getKey(prefs)!!)
+    val encoded = Base64.getEncoder().encodeToString(cipher)   // <-- not toString(UTF_8)
     val username = getSharingProfile(prefs)
 
     val json = buildJsonObject {
         put("username", username)
         put("key", encoded)
-
     }
 
     val client = HttpClient() {

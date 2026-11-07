@@ -2,9 +2,12 @@ package com.capputinodevelopment.planagerstud.screens
 
 import android.content.ClipData
 import android.content.Context
+import android.widget.Space
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -121,7 +124,7 @@ fun Self(modifier: Modifier, navController: NavController) {
         ) {
             Headline("Capputino", modifier = Modifier.padding(start = 16.dp))
             SubHeadline(
-                "Zeige diesen QR Code deinen Freunden",
+                "Zeige diesen QR Code deinen Freunden oder schicke ihnen deinen Freundescode.",
                 modifier = Modifier.padding(start = 16.dp)
             )
             Box(
@@ -138,7 +141,7 @@ fun Self(modifier: Modifier, navController: NavController) {
                         modifier = Modifier
                             .size(256.dp)
                             .padding(32.dp),
-                        painter = getQRCodePainter("$username%20$keyString"),
+                        painter = getQRCodePainter("$username%99$keyString"),
                         contentDescription = "Friend QR Code"
                     )
                 }
@@ -149,27 +152,26 @@ fun Self(modifier: Modifier, navController: NavController) {
                 colors = ButtonDefaults.filledTonalButtonColors(),
                 onClick = {
                     scope.launch {
-                        clipboardManager.setClipEntry(ClipEntry(ClipData.newPlainText("Sharing code", "$username%20$keyString")))
+                        clipboardManager.setClipEntry(ClipEntry(ClipData.newPlainText("Sharing code", "$username%99$keyString")))
                     }
                 },
                 modifier = Modifier
                     .padding(32.dp)
             ) {
-                Column(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        modifier = Modifier
-                            .fillMaxWidth(),
                         fontSize = 30.sp,
                         color = MaterialTheme.colorScheme.primary,
-                        textAlign = TextAlign.Center,
-                        text = "Encryption Key"
+                        text = "Freundescode:"
                     )
+                    Spacer(Modifier.weight(1f))
                     Text(
-                        text = keyString
+                        text = "*****"
                     )
                 }
             }

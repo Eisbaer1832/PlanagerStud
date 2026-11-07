@@ -1,6 +1,5 @@
 package com.capputinodevelopment.planagerstud.components
 
-import android.R
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialExpressiveTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
@@ -18,7 +16,6 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.capputinodevelopment.planagerstud.database.Lesson
@@ -38,7 +35,7 @@ fun DetailsSheet(lesson: Lesson, hide: () -> Unit) {
             Text(
                 modifier = Modifier
                     .padding(horizontal = 16.dp),
-                text = lesson.title.substringAfter(" "),
+                text = lesson.title,
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.headlineSmallEmphasized
             )
