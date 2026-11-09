@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.capputinodevelopment.planagerstud"
+    namespace = "com.capputinodevelopment.planager_campus"
     compileSdk {
         version = release(37) {
             minorApiLevel = 1
@@ -14,7 +14,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.capputinodevelopment.planagerstud"
+        applicationId = "com.capputinodevelopment.planager_campus"
         minSdk = 31
         targetSdk = 36
         versionCode = 1
