@@ -19,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.capputinodevelopment.planager_campus.database.Lesson
+import java.time.OffsetDateTime
+import java.time.format.DateTimeFormatter
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,7 +91,7 @@ fun DetailsSheet(lesson: Lesson, hide: () -> Unit) {
                         .fillMaxWidth()
                         .padding(16.dp),
                     textAlign = TextAlign.Center,
-                    text = lesson.from
+                    text = displayIsoDate(lesson.from)
                 )
             }
             Text(
@@ -110,7 +112,7 @@ fun DetailsSheet(lesson: Lesson, hide: () -> Unit) {
                         .fillMaxWidth()
                         .padding(16.dp),
                     textAlign = TextAlign.Center,
-                    text = lesson.until
+                    text = displayIsoDate(lesson.until)
                 )
             }
             Text(
@@ -132,9 +134,19 @@ fun DetailsSheet(lesson: Lesson, hide: () -> Unit) {
                         .fillMaxWidth()
                         .padding(16.dp),
                     textAlign = TextAlign.Center,
-                    text = lesson.exDates.replace(",", "\n")
+                    text = lesson.exDates.split(",").joinToString( separator = "\n", transform = { displayIsoDate(it) })
                 )
             }
         }
     }
+}
+
+fun displayIsoDate(dateString: String): String {
+    val preDate = dateString.replace("\"", "")
+    val dateTime = OffsetDateTime.parse(preDate)
+    val formatted = dateTime.format(
+        DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+    )
+
+    return formatted?:dateString
 }

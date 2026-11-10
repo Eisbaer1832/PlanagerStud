@@ -18,7 +18,7 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import java.util.Base64
 
-suspend fun pushToServer(db: AppDatabase, prefs: SharedPreferences) {
+suspend fun pushToServer(db: AppDatabase, prefs: SharedPreferences, success: () -> Unit) {
     val lessons = db.lessonsDAO().getAll().first()
     val plain = Json.encodeToString(lessons).encodeToByteArray()
     val cipher = aesEncrypt(plain, getKey(prefs)!!)
@@ -38,8 +38,14 @@ suspend fun pushToServer(db: AppDatabase, prefs: SharedPreferences) {
             })
         }
     }
-    client.post("http://194.163.141.76:3003/api/save") {
+    val response = client.post("http://194.163.141.76:3003/api/save") {
         contentType(ContentType.Application.Json)
         setBody(json)
     }
+
+    if (response.status.value == 200) {
+        println("save successful")
+        success()
+    }
+
 }

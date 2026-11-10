@@ -21,8 +21,11 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.ViewWeek
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -75,6 +78,7 @@ fun PlanagerStudApp() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
 
     db = Room.databaseBuilder(
         context,
@@ -84,6 +88,9 @@ fun PlanagerStudApp() {
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         floatingActionButton =  {
             if (currentRoute == "friends/overview") {
                 FABAddFriend(db)
@@ -114,7 +121,7 @@ fun PlanagerStudApp() {
                 ViewWrapper { DayView(it) {} }
             }
             composable(AppDestinations.WEEK.route) { ViewWrapper(true){WeekView(startDate = it)} }
-            composable(AppDestinations.SETTINGS.route) { Settings(db, innerPadding) }
+            composable(AppDestinations.SETTINGS.route) { Settings(db, innerPadding, snackbarHostState) }
             friendsGraph(navController,innerPadding)
         }
     }

@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import com.capputinodevelopment.planager_campus.api.friends.getFriendsData
 import com.capputinodevelopment.planager_campus.components.DetailsSheet
+import com.capputinodevelopment.planager_campus.components.Headline
 import com.capputinodevelopment.planager_campus.components.WeekLessonCard
 import com.capputinodevelopment.planager_campus.database.Database.db
 import com.capputinodevelopment.planager_campus.database.Friend
@@ -98,96 +99,104 @@ fun WeekView(modifier: Modifier = Modifier, startDate: LocalDate, friend: Friend
             }
         } else {
             val days = arrayOf("Mo", "Di", "Mi", "Do", "Fr")
-            BoxWithConstraints(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                val availableHeight: Dp = maxHeight
-                Column(
-                    modifier = Modifier.padding(start=75.dp)
-                ) {
-                    Spacer(Modifier.height(70.dp))
-                    for (i in 8..18) {
-                        Surface(
-                            color = MaterialTheme.colorScheme.outlineVariant,
-                            modifier = Modifier
-                                .height(3.dp)
-                                .fillMaxWidth()
-                        ) {}
-                        Spacer(Modifier.height((availableHeight / 20) + 19.5.dp)) // why 19.5, well really it should be the text height (25) - the line height (3), but that didn't work and 19.5 does so wee'l ignore this until it breaks
-                    }
+            Column() { // exists purely for the friend title
+
+                if (friend != null) {
+                    Headline("${friend.username}s Stundenplan", Modifier.padding(16.dp))
                 }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxSize()
+                BoxWithConstraints(
+                    modifier = Modifier.fillMaxSize()
                 ) {
-                    BoxWithConstraints(
-                        modifier = Modifier
-                            .width(screenWidth / 6)
-                            .padding(top = 60.dp)
-                            .fillMaxHeight()
+                    val availableHeight: Dp = maxHeight
+                    Column(
+                        modifier = Modifier.padding(start=75.dp)
                     ) {
-                        val availableHeight: Dp = maxHeight
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            for (i in 8..18) {
-                                Text(
-                                    text = if(i < 10 ) {"0${i}:00"}else {"${i}:00"},
-                                    modifier = Modifier.height(25.dp)
-                                )
-                                Spacer(Modifier.height(availableHeight / 20))
-                            }
+
+                        Spacer(Modifier.height(70.dp))
+                        for (i in 8..18) {
+                            Surface(
+                                color = MaterialTheme.colorScheme.outlineVariant,
+                                modifier = Modifier
+                                    .height(3.dp)
+                                    .fillMaxWidth()
+                            ) {}
+                            Spacer(Modifier.height((availableHeight / 20) + 19.5.dp)) // why 19.5, well really it should be the text height (25) - the line height (3), but that didn't work and 19.5 does so weeee'll ignore this until it breaks
                         }
                     }
-                    for (i in 0..<days.size) {
-                        Column {
-                            Card(
-                                modifier = Modifier
-                                    .height(67.dp)
-                                    .width(screenWidth / 6)
-                                    .padding(3.dp)
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        BoxWithConstraints(
+                            modifier = Modifier
+                                .width(screenWidth / 6)
+                                .padding(top = 60.dp)
+                                .fillMaxHeight()
+                        ) {
+                            val availableHeight: Dp = maxHeight
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                                for (i in 8..18) {
                                     Text(
-                                        text = days[i],
-                                        fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.padding(top=5.dp, start = 5.dp, end = 10.dp)
+                                        text = if(i < 10 ) {"0${i}:00"}else {"${i}:00"},
+                                        modifier = Modifier.height(25.dp)
                                     )
-                                    val day = startDate.plusDays(i.toLong())
-                                    Text(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        text = "${day.dayOfMonth}.${day.monthValue}",
-                                        textAlign = TextAlign.Center
-                                    )
+                                    Spacer(Modifier.height(availableHeight / 20))
                                 }
                             }
+                        }
+                        for (i in 0..<days.size) {
+                            Column {
+                                Card(
+                                    modifier = Modifier
+                                        .height(67.dp)
+                                        .width(screenWidth / 6)
+                                        .padding(3.dp)
+                                ) {
+                                    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(
+                                            text = days[i],
+                                            fontWeight = FontWeight.Bold,
+                                            modifier = Modifier.padding(top=5.dp, start = 5.dp, end = 10.dp)
+                                        )
+                                        val day = startDate.plusDays(i.toLong())
+                                        Text(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            text = "${day.dayOfMonth}.${day.monthValue}",
+                                            textAlign = TextAlign.Center
+                                        )
+                                    }
+                                }
 
-                            BoxWithConstraints(
-                                modifier = Modifier.fillMaxHeight()
-                            ) {
-                                val availableHeight: Dp = maxHeight
-                                // show lessons of the day
-                                var lastPos = 8.0;
-                                Column {
-                                    lessons
-                                        .filter { it.weekDay - 1 == i }
-                                        .sortedBy { it.start }
-                                        .forEachIndexed {i, lesson ->
-                                            val t = decTime(lesson.start)
-                                            val timeBetween = (t - lastPos)
-                                            lastPos = decTime(lesson.end);
+                                BoxWithConstraints(
+                                    modifier = Modifier.fillMaxHeight()
+                                ) {
+                                    val availableHeight: Dp = maxHeight
+                                    // show lessons of the day
+                                    var lastPos = 8.0;
+                                    Column {
+                                        lessons
+                                            .filter { it.weekDay - 1 == i }
+                                            .sortedBy { it.start }
+                                            .forEachIndexed {i, lesson ->
+                                                val t = decTime(lesson.start)
+                                                val timeBetween = (t - lastPos)
+                                                lastPos = decTime(lesson.end);
 
-                                            var height = calcSpaceBetween(decTime(lesson.end)- decTime(lesson.start), t, availableHeight,0)
-                                            var space = (calcSpaceBetween(timeBetween, t, availableHeight,i))
-                                            if (decTime(lesson.end).mod(1f) != 0.0) {
-                                                println("true for" + lesson.end)
-                                                space -= 25.dp
-                                            }
+                                                var height = calcSpaceBetween(decTime(lesson.end)- decTime(lesson.start), t, availableHeight,0)
+                                                var space = (calcSpaceBetween(timeBetween, t, availableHeight,i))
+                                                if (decTime(lesson.end).mod(1f) != 0.0) {
+                                                    println("true for" + lesson.end)
+                                                    space -= 25.dp
+                                                }
 
-                                            Spacer(modifier = Modifier.height(space))
-                                            WeekLessonCard(lesson, height) {detailLesson = lesson}
+                                                Spacer(modifier = Modifier.height(space))
+                                                WeekLessonCard(lesson, height) {detailLesson = lesson}
+                                        }
                                     }
                                 }
                             }

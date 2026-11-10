@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,7 +41,7 @@ import kotlinx.serialization.json.jsonObject
 
 
 @Composable
-fun Settings(db: AppDatabase, innerPadding: PaddingValues) {
+fun Settings(db: AppDatabase, innerPadding: PaddingValues, snackbarHostState: SnackbarHostState) {
     val context = LocalContext.current
     val prefs = context.getSharedPreferences("PlanagerStudPrefs", Context.MODE_PRIVATE)
     var fetchNewData by remember { mutableStateOf(false) }
@@ -71,7 +72,12 @@ fun Settings(db: AppDatabase, innerPadding: PaddingValues) {
 
             SettingsBlock("Stundenplan mit deinen Freunden teilen", Icons.Default.Share) {
                 scope.launch {
-                    pushToServer(db, prefs)
+                    pushToServer(db, prefs){
+                        //success
+                        scope.launch {
+                            snackbarHostState.showSnackbar("Erfolgreich synchronisiert")
+                        }
+                    }
                 }
             }
 
