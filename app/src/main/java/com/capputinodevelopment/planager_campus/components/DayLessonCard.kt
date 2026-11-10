@@ -45,6 +45,11 @@ fun DayLessonCard(
                 modifier = Modifier.padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+                // get rid of the id inside the title
+                var numberless = lesson.title.split(Regex("(?<=\\d)(?=\\D)"))
+                if (numberless.size > 1) {
+                    numberless = numberless.drop(1)
+                }
 
                 Text(
                     modifier = Modifier.fillMaxSize(),
@@ -53,7 +58,7 @@ fun DayLessonCard(
                     fontWeight = FontWeight.Bold,
                     lineHeight = 30.sp,
                     color = MaterialTheme.colorScheme.primary,
-                    text = lesson.title.substringAfter(" "),
+                    text = numberless.joinToString(" "),
                 )
             }
 

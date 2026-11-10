@@ -52,7 +52,7 @@ fun WeekLessonCard (lesson: Lesson, height: Dp, onClick: () -> Unit) {
                     maxLines = 1,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    text = nameShortener(lesson.title.substringAfter(" "))
+                    text = nameShortener(lesson.title)
                 )
             }
             Column{
@@ -71,7 +71,9 @@ fun WeekLessonCard (lesson: Lesson, height: Dp, onClick: () -> Unit) {
 
 
 fun nameShortener(name: String): String{
-    val ns = name
+    val numberless = name.split(Regex("(?<=\\d)(?=\\D)")).drop(1).joinToString(" ")
+
+    val ns = numberless
         .replace("und", "&")
         .split("für")[0]
         .trim()
