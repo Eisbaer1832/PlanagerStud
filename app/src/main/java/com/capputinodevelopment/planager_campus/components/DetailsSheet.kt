@@ -37,7 +37,7 @@ fun DetailsSheet(lesson: Lesson, hide: () -> Unit) {
             Text(
                 modifier = Modifier
                     .padding(horizontal = 16.dp),
-                text = lesson.title,
+                text = cutIdFromTitle(lesson.title),
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.headlineSmallEmphasized
             )
@@ -142,6 +142,7 @@ fun DetailsSheet(lesson: Lesson, hide: () -> Unit) {
 }
 
 fun displayIsoDate(dateString: String): String {
+    if (dateString.isEmpty()) {return dateString}
     val preDate = dateString.replace("\"", "")
     val dateTime = OffsetDateTime.parse(preDate)
     val formatted = dateTime.format(

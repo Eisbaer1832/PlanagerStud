@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.capputinodevelopment.planager_campus.database.Lesson
+import kotlin.text.split
 import kotlin.text.substringAfter
 
 
@@ -69,9 +70,16 @@ fun WeekLessonCard (lesson: Lesson, height: Dp, onClick: () -> Unit) {
     }
 }
 
+fun cutIdFromTitle(title:String): String {
+    var idless = title.split(Regex("(?<=\\d{4})(?=\\D)"))
+    if (idless.size > 1) {
+        idless = idless.drop(1)
+    }
+    return idless.joinToString(" ").removePrefix(" ")
+}
 
 fun nameShortener(name: String): String{
-    val numberless = name.split(Regex("(?<=\\d)(?=\\D)")).drop(1).joinToString(" ")
+    val numberless = cutIdFromTitle(name)
 
     val ns = numberless
         .replace("und", "&")

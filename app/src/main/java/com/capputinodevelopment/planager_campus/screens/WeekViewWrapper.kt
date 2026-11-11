@@ -26,7 +26,7 @@ fun ViewWrapper(addWeeks: Boolean = false, view: @Composable (LocalDate) -> Unit
         if (addWeeks) {
             view(monday.plusWeeks(index.toLong()))
         }else {
-            view(monday.plusDays(index.toLong()))
+            view(now().plusDays(index.toLong()))
         }
     }}
 
