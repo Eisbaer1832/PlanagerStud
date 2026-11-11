@@ -17,13 +17,24 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import com.capputinodevelopment.planager_campus.api.friends.addFriend
 import com.capputinodevelopment.planager_campus.database.AppDatabase
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun FABAddFriend(db: AppDatabase) {
     var expanded by remember { mutableStateOf(false) }
     var addByCode by remember { mutableStateOf(false) }
     var scope = rememberCoroutineScope()
+    var scanQRCode by remember { mutableStateOf(false) }
+    if (scanQRCode) {
+        ScanQRCode {
+            scope.launch {
+                addFriend(db,it)
+                scanQRCode = false
+            }
+        }
+    }
 
     if (addByCode) {
         AddFriendByText{ fCode ->
@@ -47,7 +58,7 @@ fun FABAddFriend(db: AppDatabase) {
         }
     ) {
         FloatingActionButtonMenuItem(
-            onClick = {},
+            onClick = {scanQRCode = true},
             text = { Text("QR Code") },
             icon = { Icon(Icons.Default.QrCode, "QR Code") }
         )

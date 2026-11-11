@@ -129,7 +129,7 @@ fun Self(modifier: Modifier, navController: NavController) {
             ) {
                 Surface(
                     shape = RoundedCornerShape(32.dp),
-                    color = MaterialTheme.colorScheme.primaryContainer,
+                    color = MaterialTheme.colorScheme.surfaceContainer,
                 ) {
                     Image(
                         modifier = Modifier
@@ -176,11 +176,11 @@ fun Self(modifier: Modifier, navController: NavController) {
 
 @Composable
 fun getQRCodePainter(data: String): QrCodePainter {
-    val c1 = MaterialTheme.colorScheme.tertiaryContainer
+    val c1 = MaterialTheme.colorScheme.secondary
     val c2 = MaterialTheme.colorScheme.primary
     return rememberQrCodePainter(
         data = data,
-        ballShape = QrBallShape.circle(),
+        ballShape = QrBallShape.roundCorners(16f),
         darkPixelShape = QrPixelShape.roundCorners(),
         frameShape = QrFrameShape.roundCorners(.25f),
         darkBrush = QrBrush.brush {
@@ -190,7 +190,7 @@ fun getQRCodePainter(data: String): QrCodePainter {
                 end = Offset(it, it)
             )
         },
-        frameBrush = QrBrush.solid(Color.Black),
+        frameBrush = QrBrush.solid(c1),
     )
 
 }

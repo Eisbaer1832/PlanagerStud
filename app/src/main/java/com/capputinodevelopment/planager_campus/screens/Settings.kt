@@ -66,9 +66,9 @@ fun Settings(db: AppDatabase, innerPadding: PaddingValues, snackbarHostState: Sn
                 text = "Synchronisation"
             )
             SettingsBlock("Daten von StudIp laden", Icons.Default.Sync) {fetchNewData = true}
-            SettingsBlock("Testdaten laden", Icons.Default.Sync) {
-                scope.launch { googleTest() }
-            }
+            //SettingsBlock("Testdaten laden", Icons.Default.Sync) {
+            //    scope.launch { googleTest() }
+            //}
 
             SettingsBlock("Stundenplan mit deinen Freunden teilen", Icons.Default.Share) {
                 scope.launch {

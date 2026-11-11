@@ -12,8 +12,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -26,6 +30,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +48,7 @@ import com.capputinodevelopment.planager_campus.database.Database.db
 import com.capputinodevelopment.planager_campus.database.Friend
 import com.capputinodevelopment.planager_campus.database.Lesson
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import kotlin.math.floor
 
@@ -52,7 +58,7 @@ import kotlin.math.floor
 fun WeekView(modifier: Modifier = Modifier, startDate: LocalDate, friend: Friend? = null) {
     var lessons by remember { mutableStateOf(listOf<Lesson>()) }
     var detailLesson by remember { mutableStateOf<Lesson?>(null) }
-
+    val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         lessons = if (friend == null) {
              db.lessonsDAO().getAll().first();
@@ -102,7 +108,21 @@ fun WeekView(modifier: Modifier = Modifier, startDate: LocalDate, friend: Friend
             Column() { // exists purely for the friend title
 
                 if (friend != null) {
-                    Headline("${friend.username}s Stundenplan", Modifier.padding(16.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Headline("${friend.username}s Stundenplan", Modifier.padding(16.dp))
+                        Spacer(Modifier.weight(1f))
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    db.friendsDAO().delete(friend)
+                                }
+                            }
+                        ) {
+                            Icon(Icons.Default.Delete, "Delete")
+                        }
+                    }
                 }
 
                 BoxWithConstraints(
