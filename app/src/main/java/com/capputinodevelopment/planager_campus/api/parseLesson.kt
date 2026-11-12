@@ -51,7 +51,7 @@ fun course(element: JsonElement): Lesson {
     lesson.until = recurrence.jsonObject["UNTIL"]!!.jsonPrimitive.content
     lesson.exDates = recurrence.jsonObject["EXDATES"]!!.jsonArray.joinToString(",")
 
-    lesson.location = attrs.jsonObject["locations"]!!.jsonArray[0].jsonPrimitive.content.split(" - ")[1]
+    lesson.location = attrs.jsonObject["locations"]!!.jsonArray[0].jsonPrimitive.content.split(" - ").last()
 
     return lesson
 }
