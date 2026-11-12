@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ColorLens
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Publish
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Sync
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +29,9 @@ import com.capputinodevelopment.planager_campus.api.friends.pushToServer
 import com.capputinodevelopment.planager_campus.api.parseLesson
 import com.capputinodevelopment.planager_campus.components.Headline
 import com.capputinodevelopment.planager_campus.components.SettingsBlock
+import com.capputinodevelopment.planager_campus.components.ThemePickerBottomSheet
 import com.capputinodevelopment.planager_campus.database.AppDatabase
+import com.zaki.dynamic.core.sheet.ThemePickerContainer
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.request.get
@@ -45,6 +50,14 @@ fun Settings(db: AppDatabase, innerPadding: PaddingValues, snackbarHostState: Sn
     val context = LocalContext.current
     val prefs = context.getSharedPreferences("PlanagerStudPrefs", Context.MODE_PRIVATE)
     var fetchNewData by remember { mutableStateOf(false) }
+    var openThemeSwitcher by remember { mutableStateOf(false) }
+
+    if (openThemeSwitcher) {
+        ThemePickerBottomSheet (
+            onDismiss = { openThemeSwitcher = false }
+        )
+    }
+
     val scope = rememberCoroutineScope()
     if (fetchNewData) {
         Authentication("https://studip.tu-braunschweig.de/dispatch.php/login") {
@@ -65,12 +78,11 @@ fun Settings(db: AppDatabase, innerPadding: PaddingValues, snackbarHostState: Sn
                 color = MaterialTheme.colorScheme.primary,
                 text = "Synchronisation"
             )
-            SettingsBlock("Daten von StudIp laden", Icons.Default.Sync) {fetchNewData = true}
             //SettingsBlock("Testdaten laden", Icons.Default.Sync) {
             //    scope.launch { googleTest() }
             //}
-
-            SettingsBlock("Stundenplan mit deinen Freunden teilen", Icons.Default.Share) {
+            SettingsBlock("Daten von StudIp laden", Icons.Default.Download) {fetchNewData = true}
+            SettingsBlock("Geteilten Plan aktualisieren", Icons.Default.Publish) {
                 scope.launch {
                     pushToServer(db, prefs){
                         //success
@@ -80,6 +92,15 @@ fun Settings(db: AppDatabase, innerPadding: PaddingValues, snackbarHostState: Sn
                     }
                 }
             }
+
+            Text(
+                style = MaterialTheme.typography.headlineSmall,
+                fontSize = 18.sp,
+                color = MaterialTheme.colorScheme.primary,
+                text = "Anpassung"
+            )
+
+            SettingsBlock("Theme wechseln", Icons.Default.ColorLens) {openThemeSwitcher = true}
 
         }
     }

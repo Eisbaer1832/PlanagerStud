@@ -30,7 +30,7 @@ suspend fun getFriendsData(friend: Friend): List<Lesson> {
     val keyBytes = Base64.getDecoder().decode(friend.key)
     val loadedKey = SecretKeySpec(keyBytes, "AES")
 
-    val res = client.get("http://194.163.141.76:3003/api/get/" +friend.username)
+    val res = client.get("https://planagerstud.tbwebtech.de/api/get/" +friend.username)
     val body = res.body<String>()
     val data = Base64.getDecoder().decode(body)
     val decryptedTable = aesDecrypt( data, loadedKey).decodeToString()

@@ -1,5 +1,6 @@
 package com.capputinodevelopment.planager_campus
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.outlined.Groups
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.ViewWeek
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -44,6 +46,7 @@ import com.capputinodevelopment.planager_campus.components.NavBar
 import com.capputinodevelopment.planager_campus.database.AppDatabase
 import com.capputinodevelopment.planager_campus.database.Database.db
 import com.capputinodevelopment.planager_campus.database.Friend
+import com.capputinodevelopment.planager_campus.database.preferences.SettingsThemeStore
 import com.capputinodevelopment.planager_campus.screens.DayView
 import com.capputinodevelopment.planager_campus.screens.Friends
 import com.capputinodevelopment.planager_campus.screens.Self
@@ -51,6 +54,14 @@ import com.capputinodevelopment.planager_campus.screens.Settings
 import com.capputinodevelopment.planager_campus.screens.ViewWrapper
 import com.capputinodevelopment.planager_campus.screens.WeekView
 import com.capputinodevelopment.planager_campus.ui.theme.PlanagerStudTheme
+import com.zaki.dynamic.core.adapter.Material3Adapter
+import com.zaki.dynamic.core.controller.ThemeController
+import com.zaki.dynamic.core.createThemeFamily
+import com.zaki.dynamic.core.model.ThemeId
+import com.zaki.dynamic.core.provider.DynamicThemeProvider
+import com.zaki.dynamic.core.provider.PlatformSystemThemeProvider
+import com.zaki.dynamic.core.registry.DefaultThemeRegistryFactory
+import com.zaki.dynamic.core.registry.ThemeRegistry
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalAnimationApi::class)
@@ -79,54 +90,82 @@ fun PlanagerStudApp() {
     val currentRoute = navBackStackEntry?.destination?.route
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
+    val prefs = context.getSharedPreferences("PlanagerStudPrefs", Context.MODE_PRIVATE)
 
     db = Room.databaseBuilder(
         context,
         AppDatabase::class.java, "PlanagerStud"
     ).build()
 
+    val youTheme = createThemeFamily(
+        id = "you",
+        displayName = "MaterialYou",
+        lightScheme = MaterialTheme.colorScheme,
+        darkScheme = MaterialTheme.colorScheme
+    )
+    val registry = DefaultThemeRegistryFactory.createWithDefaults()
+    registry.registerFamily(youTheme)
+    // Theming setup
+    val themeController = ThemeController(
+        registry = registry,
+        store = SettingsThemeStore(prefs),
+        system = PlatformSystemThemeProvider(),
+        defaultThemeId = ThemeId("m3_light")
+    )
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
-        floatingActionButton =  {
-            if (currentRoute == "friends/overview") {
-                FABAddFriend(db)
-            }
-        },
-        bottomBar = {
-            NavBar(
-                currentScreen = currentRoute,
-            ) { destination ->
-                navController.navigate(destination.route) {
-                    popUpTo(navController.graph.findStartDestination().id) {saveState = true}
-                    launchSingleTop = true
-                    restoreState = false
+    DynamicThemeProvider(
+        controller = themeController,
+        adapter = Material3Adapter()
+    ) {
+
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState)
+            },
+            floatingActionButton = {
+                if (currentRoute == "friends/overview") {
+                    FABAddFriend(db)
                 }
+            },
+            bottomBar = {
+                NavBar(
+                    currentScreen = currentRoute,
+                ) { destination ->
+                    navController.navigate(destination.route) {
+                        popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = false
+                    }
+                }
+            },
+        ) { innerPadding ->
+            NavHost(
+                navController = navController,
+                startDestination = AppDestinations.TODAY.route,
+                modifier = Modifier.padding(innerPadding),
+                enterTransition = { fadeIn(animationSpec = tween(100)) },
+                exitTransition = { fadeOut(animationSpec = tween(100)) },
+                popEnterTransition = { fadeIn(animationSpec = tween(100)) },
+                popExitTransition = { fadeOut(animationSpec = tween(100)) }
+            ) {
+                composable(AppDestinations.TODAY.route) {
+                    ViewWrapper { DayView(it) {} }
+                }
+                composable(AppDestinations.WEEK.route) { ViewWrapper(true) { WeekView(startDate = it) } }
+                composable(AppDestinations.SETTINGS.route) {
+                    Settings(
+                        db,
+                        innerPadding,
+                        snackbarHostState
+                    )
+                }
+                friendsGraph(navController, innerPadding)
             }
-        },
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = AppDestinations.TODAY.route,
-            modifier = Modifier.padding(innerPadding),
-            enterTransition = { fadeIn(animationSpec = tween(100)) },
-            exitTransition = { fadeOut(animationSpec = tween(100)) },
-            popEnterTransition = { fadeIn(animationSpec = tween(100)) },
-            popExitTransition = { fadeOut(animationSpec = tween(100)) }
-        ) {
-            composable(AppDestinations.TODAY.route) {
-                ViewWrapper { DayView(it) {} }
-            }
-            composable(AppDestinations.WEEK.route) { ViewWrapper(true){WeekView(startDate = it)} }
-            composable(AppDestinations.SETTINGS.route) { Settings(db, innerPadding, snackbarHostState) }
-            friendsGraph(navController,innerPadding)
         }
     }
-
 }
+
 
 
 fun NavGraphBuilder.friendsGraph(navController: NavController, paddingValues: PaddingValues) {

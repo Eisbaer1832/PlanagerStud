@@ -17,8 +17,8 @@ android {
         applicationId = "com.capputinodevelopment.planager_campus"
         minSdk = 31
         targetSdk = 36
-        versionCode = 101
-        versionName = "1.01"
+        versionCode = 103
+        versionName = "1.0.3"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -42,6 +42,8 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.androidx.compose.bom))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -79,4 +81,6 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
     implementation(libs.accompanist.permissions)
     implementation(libs.androidx.camera.camera2)
+    implementation(libs.theme.core)
+
 }

@@ -38,7 +38,7 @@ suspend fun pushToServer(db: AppDatabase, prefs: SharedPreferences, success: () 
             })
         }
     }
-    val response = client.post("http://194.163.141.76:3003/api/save") {
+    val response = client.post("https://planagerstud.tbwebtech.de/api/save") {
         contentType(ContentType.Application.Json)
         setBody(json)
     }
